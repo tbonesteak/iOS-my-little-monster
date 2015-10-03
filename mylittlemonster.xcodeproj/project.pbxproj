@@ -13,6 +13,7 @@
 		CEF6105C1BB22C570023B09A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEF6105A1BB22C570023B09A /* Main.storyboard */; };
 		CEF6105E1BB22C570023B09A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEF6105D1BB22C570023B09A /* Assets.xcassets */; };
 		CEF610611BB22C570023B09A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEF6105F1BB22C570023B09A /* LaunchScreen.storyboard */; };
+		CEF8E0161BB463C900154EEF /* MonsterImg.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF8E0151BB463C900154EEF /* MonsterImg.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		CEF6105D1BB22C570023B09A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEF610601BB22C570023B09A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CEF610621BB22C570023B09A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CEF8E0151BB463C900154EEF /* MonsterImg.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonsterImg.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				CEF6105F1BB22C570023B09A /* LaunchScreen.storyboard */,
 				CEF610621BB22C570023B09A /* Info.plist */,
 				CE8ED1B01BB372FB00D9542F /* DragImg.swift */,
+				CEF8E0151BB463C900154EEF /* MonsterImg.swift */,
 			);
 			path = mylittlemonster;
 			sourceTree = "<group>";
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEF8E0161BB463C900154EEF /* MonsterImg.swift in Sources */,
 				CE8ED1B11BB372FB00D9542F /* DragImg.swift in Sources */,
 				CEF610591BB22C570023B09A /* ViewController.swift in Sources */,
 				CEF610571BB22C570023B09A /* AppDelegate.swift in Sources */,
