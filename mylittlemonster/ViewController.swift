@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation // imports the code that has the audio player
 
 class ViewController: UIViewController {
 
@@ -22,7 +23,15 @@ class ViewController: UIViewController {
     let MAX_PENALTIES = 3
     
     var penalties = 0
-    var timer: NSTimer!
+    var timer: NSTimer!;
+    var monsterHappy = false;
+    var currentItem: UInt32 = 0;  // 32 Integer can hold more values.
+    
+    var musicPlayer: AVAudioPlayer!
+    var sfxBite: AVAudioPlayer!
+    var sfxHeart: AVAudioPlayer!
+    var sfxDeath: AVAudioPlayer!
+    var sfxSkull: AVAudioPlayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,11 +45,46 @@ class ViewController: UIViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "itemDroppedOnCharacter:", name: "onTargetDropped", object: nil)
         
+        // initialize the audio files, and also guarantee that they will work and return something
+        do {
+            try musicPlayer = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("cave-music", ofType: "mp3")!))
+        
+            try sfxBite = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("bite", ofType: "wav")!))
+            try sfxHeart = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("heart", ofType: "wav")!))
+            try sfxDeath = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("death", ofType: "wav")!))
+            try sfxSkull = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("skull", ofType: "wav")!))
+            
+            musicPlayer.prepareToPlay() // prepares to play the song
+            musicPlayer.play() // plays the theme music
+            
+            sfxBite.prepareToPlay();
+            sfxHeart.prepareToPlay()
+            sfxDeath.prepareToPlay()
+            sfxSkull.prepareToPlay();
+        
+        } catch let err as NSError {
+            print(err.debugDescription)
+        }
+        
         startTimer()
  
     }
     
     func itemDroppedOnCharacter(notif: AnyObject) {
+        monsterHappy = true
+        startTimer()
+        
+        foodImg.alpha = DIM_ALPHA
+        foodImg.userInteractionEnabled = false
+        
+        heartImg.alpha = DIM_ALPHA
+        heartImg.userInteractionEnabled = false
+        
+        if currentItem == 0 {  //play the heart sound if 0, otherwise play the bite sound
+            sfxHeart.play();
+        } else {
+            sfxBite.play();
+        }
         
     }
     
@@ -54,31 +98,54 @@ class ViewController: UIViewController {
     
     func changeGameState() {  // Make the skulls see through to visible
         
-        penalties++  // Add 1 to the penalty
+        if !monsterHappy {
+            penalties++  // Add 1 to the penalty
+            sfxSkull.play() // play the skull sound
+            
+            if penalties == 1 {
+                penalty1Img.alpha = OPAQUE;
+                penalty2Img.alpha = DIM_ALPHA
+            } else if penalties == 2 {
+                penalty2Img.alpha = OPAQUE
+                penalty3Img.alpha = DIM_ALPHA
+            } else if penalties >= 3 {
+                penalty3Img.alpha = OPAQUE
+            } else {
+                penalty1Img.alpha = DIM_ALPHA
+                penalty2Img.alpha = DIM_ALPHA
+                penalty3Img.alpha = DIM_ALPHA
+            }
+            
+            if penalties >= MAX_PENALTIES {
+                gameOver()
+            }
+        }
         
-        if penalties == 1 {
-            penalty1Img.alpha = OPAQUE;
-            penalty2Img.alpha = DIM_ALPHA
-        } else if penalties == 2 {
-            penalty2Img.alpha = OPAQUE
-            penalty3Img.alpha = DIM_ALPHA
-        } else if penalties >= 3 {
-            penalty3Img.alpha = OPAQUE
+        let rand = arc4random_uniform(2) // gives a random number from the range you give it. This will be 0 or 1
+        
+        if rand == 0 {
+            foodImg.alpha = DIM_ALPHA;
+            foodImg.userInteractionEnabled = false; // prevents the user from dragging around the image. It's dimmed out now, so don't use it!
+            
+            heartImg.alpha = OPAQUE
+            heartImg.userInteractionEnabled = true;
         } else {
-            penalty1Img.alpha = DIM_ALPHA
-            penalty2Img.alpha = DIM_ALPHA
-            penalty3Img.alpha = DIM_ALPHA
+            heartImg.alpha = DIM_ALPHA
+            heartImg.userInteractionEnabled = false;
+            
+            foodImg.alpha = OPAQUE
+            foodImg.userInteractionEnabled = true;
         }
         
-        if penalties >= MAX_PENALTIES {
-            gameOver()
-        }
+        currentItem = rand
+        monsterHappy = false;
         
     }
 
     func gameOver() {
         timer.invalidate()
         monsterImg.playDeathAnimation()
+        sfxDeath.play() // play death sound effect
     }
 
 }
